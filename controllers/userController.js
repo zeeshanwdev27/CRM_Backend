@@ -109,15 +109,10 @@ export const deleteUser = async (req, res) => {
 
 
 
+// In your updateUser controller
 export const updateUser = async (req, res) => {
     const { id } = req.params;
-    const { name, email, phone, role, department, status, joinDate } = req.body;
-
-    // Basic validation
-    if (!name || !email || !phone || !role || !department) {
-        res.status(400);
-        throw new Error('Please include all required fields');
-    }
+    const { name, email, phone, role: roleName, department: departmentName, status, joinDate } = req.body;
 
     try {
         // Check if user exists
@@ -127,36 +122,64 @@ export const updateUser = async (req, res) => {
             throw new Error('User not found');
         }
 
-        // Check if email is being changed to one that already exists
-        if (email !== user.email) {
-            const emailExists = await User.findOne({ email });
-            if (emailExists) {
-                res.status(400);
-                throw new Error('Email already in use');
-            }
+        // Find role and department by name
+        const role = await Role.findOne({ name: roleName });
+        if (!role) {
+            res.status(400);
+            throw new Error('Invalid role specified');
         }
 
+        const department = await Department.findOne({ name: departmentName });
+        if (!department) {
+            res.status(400);
+            throw new Error('Invalid department specified');
+        }
+
+        // Rest of your code remains the same, using role._id and department._id
         const updatedUser = await User.findByIdAndUpdate(
             id,
             {
                 name,
                 email,
                 phone,
-                role,
-                department,
+                role: role._id,
+                department: department._id,
                 status: status || user.status,
                 joinDate: joinDate || user.joinDate
             },
             { new: true, runValidators: true }
         ).select('-password').populate("role").populate("department");
 
+        res.status(200).json(updatedUser);
+    } catch (error) {
+        res.status(400).json({ error: error.message || 'User update failed' });
+    }
+};
+
+
+export const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+            .select('-password')
+            .populate('role')
+            .populate('department');
+        
+        if (!user) {
+            return res.status(404).json({ 
+                status: "error",
+                message: 'User not found' 
+            });
+        }
+
         res.status(200).json({
             status: "success",
-            message: "User updated successfully",
-            data: updatedUser
+            message: "User successfully fetched",
+            data: user
         });
     } catch (error) {
-        res.status(400);
-        throw new Error(error.message || 'User update failed');
+        res.status(500).json({ 
+            status: "error",
+            message: error.message || 'Failed to fetch user' 
+        });
     }
 };
