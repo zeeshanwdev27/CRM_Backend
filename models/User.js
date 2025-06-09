@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -41,9 +40,14 @@ const userSchema = new mongoose.Schema(
       select: false
     },
     role: {
-      type: String,
-      enum: ['Developer', 'Designer', 'Project Manager', 'QA Engineer', 'Marketing', 'Sales', 'Administrator'],
-      default: 'Developer'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Role',
+      required: true
+    },
+    department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Department',
+      required: true
     },
     status: {
       type: String,
@@ -61,15 +65,6 @@ const userSchema = new mongoose.Schema(
     profileImage: {
       type: String,
       default: 'default-profile.jpg'
-    },
-    department: {
-      type: String,
-      enum: ['Engineering', 'Design', 'Product', 'Marketing', 'Sales', 'Support', 'HR'],
-      default: 'Engineering'
-    },
-    permissions: {
-      type: [String],
-      default: []
     },
     isVerified: {
       type: Boolean,
@@ -98,13 +93,13 @@ const userSchema = new mongoose.Schema(
 );
 
 
+
+
+// Virtuals and methods remain the same
 userSchema.virtual('formattedJoinDate').get(function() {
   return this.joinDate.toISOString().split('T')[0];
 });
 
-
-
-// 🔐 Hash password before saving
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   const salt = await bcrypt.genSalt(10);
@@ -112,10 +107,12 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-// 🔑 Method to compare password on login
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
+
+
+
 
 const User = mongoose.model('User', userSchema);
 export default User;

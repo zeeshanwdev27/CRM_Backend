@@ -4,6 +4,7 @@ import connectDb from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from "./routes/userRoutes.js"
 import cors from 'cors'
+import './models/index.js';
 
 const app = express();
 connectDb();
