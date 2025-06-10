@@ -2,7 +2,7 @@ import Role from '../models/Role.js';
 
 export const getRoles = async (req, res) => {
     try {
-        const roles = await Role.find({});
+        const roles = await Role.find({}).populate("department")
         res.status(200).json({
             status: "success",
             message: "Roles successfully fetched",
