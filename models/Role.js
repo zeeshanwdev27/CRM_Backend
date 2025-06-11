@@ -7,7 +7,7 @@ const roleSchema = new mongoose.Schema(
       required: [true, 'Role name is required'],
       unique: true,
       trim: true,
-      enum: ['Developer', 'Designer', 'Project Manager', 'QA Engineer', 'Marketing', 'Sales', 'Administrator'],
+      // enum: ['Developer', 'Designer', 'Project Manager', 'QA Engineer', 'Marketing', 'Sales', 'Administrator'],
       default: 'Developer'
     },
     description: {
