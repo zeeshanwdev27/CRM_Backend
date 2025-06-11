@@ -9,7 +9,7 @@ export const signInController = async (req, res) => {
   try {
     // Find user
     const user = await User.findOne({ email }).select("+password").populate("role") // password is select: false by default
-    console.log(user)
+    // console.log(user)
     
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
