@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import asyncHandler from 'express-async-handler';
 import { User } from '../models/index.js';
 
+
 const protect = asyncHandler(async (req, res, next) => {
     let token;
     
@@ -35,6 +36,7 @@ const protect = asyncHandler(async (req, res, next) => {
     }
 });
 
+
 // @desc    Admin-only middleware
 const admin = asyncHandler(async (req, res, next) => {
     // Make sure the user is populated with role
@@ -51,5 +53,6 @@ const admin = asyncHandler(async (req, res, next) => {
         throw new Error("Not authorized as admin");
     }
 });
+
 
 export { protect, admin };
