@@ -6,6 +6,7 @@ import userRoutes from "./routes/userRoutes.js"
 import roleRoutes from './routes/roleRoutes.js';  // Add this
 import departmentRoutes from './routes/departmentRoutes.js';  // Add this
 import contactsRoutes from "./routes/contactsRoutes.js"
+import clientsRoutes from "./routes/clientsRoutes.js"
 
 import cors from 'cors'
 import './models/index.js';
@@ -22,6 +23,7 @@ app.use("/api/users", userRoutes);
 app.use('/api/roles', roleRoutes);  // Add this
 app.use('/api/departments', departmentRoutes);  // Add this
 app.use("/api/contacts", contactsRoutes)
+app.use("/api/clients", clientsRoutes)
 
 
 
