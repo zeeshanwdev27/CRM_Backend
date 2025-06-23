@@ -26,7 +26,6 @@ app.use("/api/contacts", contactsRoutes)
 app.use("/api/clients", clientsRoutes)
 
 
-
 app.get("/", (req, res) => res.send("Hello World"));
 
 

@@ -93,8 +93,6 @@ const userSchema = new mongoose.Schema(
 );
 
 
-
-
 // Virtuals and methods remain the same
 userSchema.virtual('formattedJoinDate').get(function() {
   return this.joinDate.toISOString().split('T')[0];
