@@ -18,23 +18,30 @@ const clientSchema = new mongoose.Schema(
     },
     company: {
       type: String,
-      required: [true, "Contact person name is required"],
+      required: [true, "Company name is required"],
     },
     projects: {
-      type: [String], // Now this is an array of strings
-      required: [true, "Projects are required"],
-      default: [],
+      type: [
+        {
+          name: {
+            type: String,
+            required: [true, "Project name is required"],
+            trim: true,
+          },
+          value: {
+            type: Number, // Store as number for easier calculations
+            required: [true, "Project value is required"],
+            min: [0, "Project value cannot be negative"],
+          },
+        },
+      ],
+      required: [true, "At least one project is required"],
       validate: {
         validator: function (v) {
           return v.length > 0; // At least one project required
         },
         message: () => "At least one project is required",
       },
-    },
-    value: {
-      type: String, // Stored as string like "$4,250" to match frontend
-      required: [true, "Project value is required"],
-      default: "$0",
     },
     status: {
       type: String,
@@ -49,7 +56,7 @@ const clientSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, 
+    timestamps: true,
   }
 );
 
